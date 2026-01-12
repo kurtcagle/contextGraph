@@ -1,0 +1,1023 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
+@prefix mt: <http://example.org/meeting-transcript/> .
+@prefix mto: <http://example.org/meeting-transcript/ontology#> .
+
+# ============================================================================
+# ONTOLOGY METADATA
+# ============================================================================
+
+mto: a owl:Ontology ;
+    dcterms:title "Meeting Transcript Ontology"@en ;
+    dcterms:description "A comprehensive ontology for converting meeting transcriptions into structured RDF summaries, supporting decision tracking, speaker identification, intent analysis, and entity extraction."@en ;
+    dcterms:created "2026-01-11"^^xsd:date ;
+    dcterms:modified "2026-01-11"^^xsd:date ;
+    owl:versionInfo "1.0.0" ;
+    dcterms:creator "Claude Sonnet 4.5" ;
+    rdfs:comment "Uses SHACL 1.2, RDF-Star, and integrates with Wikidata taxonomy"@en .
+
+# ============================================================================
+# CORE CLASSES
+# ============================================================================
+
+mto:Meeting a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Meeting"@en ;
+    rdfs:comment "A formal or informal gathering of people for discussion and decision-making"@en ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Unique identifier for the meeting" ;
+    ] ;
+    sh:property [
+        sh:path dcterms:title ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Title or name of the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:scheduledStartTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Scheduled start time of the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:actualStartTime ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:description "Actual start time of the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:actualEndTime ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:description "Actual end time of the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:duration ;
+        sh:datatype xsd:duration ;
+        sh:maxCount 1 ;
+        sh:description "Total duration of the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:organizer ;
+        sh:node mto:Participant ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Person who called/organized the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:location ;
+        sh:or (
+            [ sh:node mto:VirtualLocation ]
+            [ sh:node mto:PhysicalLocation ]
+        ) ;
+        sh:minCount 1 ;
+        sh:description "Where the meeting takes place" ;
+    ] ;
+    sh:property [
+        sh:path mto:participant ;
+        sh:node mto:Participant ;
+        sh:minCount 1 ;
+        sh:description "People who attended the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:hasAgendaItem ;
+        sh:node mto:AgendaItem ;
+        sh:description "Agenda items discussed in the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:hasUtterance ;
+        sh:node mto:Utterance ;
+        sh:description "All utterances/comments made during the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:hasDecision ;
+        sh:node mto:Decision ;
+        sh:description "Decisions made during the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:hasTranscript ;
+        sh:node mto:Transcript ;
+        sh:maxCount 1 ;
+        sh:description "The full transcript of the meeting" ;
+    ] .
+
+mto:Participant a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Participant"@en ;
+    rdfs:comment "A person participating in a meeting"@en ;
+    sh:property [
+        sh:path foaf:mbox ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" ;
+        sh:description "Email address as primary identifier" ;
+    ] ;
+    sh:property [
+        sh:path foaf:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Full name of the participant" ;
+    ] ;
+    sh:property [
+        sh:path mto:role ;
+        sh:datatype xsd:string ;
+        sh:description "Role in the meeting (e.g., chair, presenter, attendee)" ;
+    ] ;
+    sh:property [
+        sh:path schema:jobTitle ;
+        sh:datatype xsd:string ;
+        sh:description "Job title or position" ;
+    ] ;
+    sh:property [
+        sh:path schema:affiliation ;
+        sh:or (
+            [ sh:nodeKind sh:IRI ]
+            [ sh:datatype xsd:string ]
+        ) ;
+        sh:description "Organization affiliation" ;
+    ] ;
+    sh:property [
+        sh:path mto:attendanceStatus ;
+        sh:in ( "present" "absent" "late" "left-early" ) ;
+        sh:description "Attendance status for this meeting" ;
+    ] .
+
+mto:VirtualLocation a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Virtual Location"@en ;
+    rdfs:comment "An online meeting location"@en ;
+    sh:property [
+        sh:path mto:platform ;
+        sh:in ( "Teams" "GoogleMeet" "Zoom" "Webex" "Other" ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Telepresence platform used" ;
+    ] ;
+    sh:property [
+        sh:path mto:meetingUrl ;
+        sh:datatype xsd:anyURI ;
+        sh:description "URL for joining the meeting" ;
+    ] ;
+    sh:property [
+        sh:path mto:meetingId ;
+        sh:datatype xsd:string ;
+        sh:description "Platform-specific meeting identifier" ;
+    ] ;
+    sh:property [
+        sh:path mto:accountId ;
+        sh:datatype xsd:string ;
+        sh:description "Account identifier on the platform" ;
+    ] .
+
+mto:PhysicalLocation a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Physical Location"@en ;
+    rdfs:comment "A physical meeting location"@en ;
+    sh:property [
+        sh:path schema:address ;
+        sh:or (
+            [ sh:datatype xsd:string ]
+            [ sh:node schema:PostalAddress ]
+        ) ;
+        sh:description "Physical address" ;
+    ] ;
+    sh:property [
+        sh:path mto:room ;
+        sh:datatype xsd:string ;
+        sh:description "Room name or number" ;
+    ] ;
+    sh:property [
+        sh:path mto:building ;
+        sh:datatype xsd:string ;
+        sh:description "Building name or identifier" ;
+    ] .
+
+mto:Utterance a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Utterance"@en ;
+    rdfs:comment "A single statement or comment made by a speaker"@en ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Unique identifier for the utterance" ;
+    ] ;
+    sh:property [
+        sh:path mto:speaker ;
+        sh:node mto:Participant ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Person who made the statement" ;
+    ] ;
+    sh:property [
+        sh:path mto:timestamp ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Absolute timestamp when statement was made" ;
+    ] ;
+    sh:property [
+        sh:path mto:relativeTime ;
+        sh:datatype xsd:duration ;
+        sh:description "Time relative to meeting start" ;
+    ] ;
+    sh:property [
+        sh:path mto:sequenceNumber ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:description "Sequential order within the meeting" ;
+    ] ;
+    sh:property [
+        sh:path rdf:value ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Text content of the utterance" ;
+    ] ;
+    sh:property [
+        sh:path mto:intent ;
+        sh:node mto:Intent ;
+        sh:description "Classified intent of the utterance" ;
+    ] ;
+    sh:property [
+        sh:path mto:relatedToAgenda ;
+        sh:node mto:AgendaItem ;
+        sh:description "Agenda item this utterance relates to" ;
+    ] ;
+    sh:property [
+        sh:path mto:mentionsEntity ;
+        sh:nodeKind sh:IRI ;
+        sh:description "Entities mentioned (e.g., Wikidata URIs)" ;
+    ] ;
+    sh:property [
+        sh:path mto:responseToUtterance ;
+        sh:node mto:Utterance ;
+        sh:description "Previous utterance this is responding to" ;
+    ] ;
+    sh:property [
+        sh:path mto:sentiment ;
+        sh:in ( "positive" "neutral" "negative" "mixed" ) ;
+        sh:description "Sentiment analysis of the utterance" ;
+    ] .
+
+mto:Intent a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Intent"@en ;
+    rdfs:comment "The classified intent or purpose of an utterance"@en ;
+    sh:property [
+        sh:path mto:intentType ;
+        sh:in ( 
+            "question" "answer" "proposal" "support" "objection" 
+            "clarification" "information" "procedural" "motion" 
+            "amendment" "vote-call" "acknowledgment" "summary"
+        ) ;
+        sh:minCount 1 ;
+        sh:description "Type of intent" ;
+    ] ;
+    sh:property [
+        sh:path mto:confidence ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:description "Confidence score for intent classification" ;
+    ] ;
+    sh:property [
+        sh:path mto:topic ;
+        sh:or (
+            [ sh:nodeKind sh:IRI ]
+            [ sh:datatype xsd:string ]
+        ) ;
+        sh:description "Topic or subject of the intent" ;
+    ] .
+
+mto:AgendaItem a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Agenda Item"@en ;
+    rdfs:comment "A topic or item on the meeting agenda"@en ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Unique identifier for the agenda item" ;
+    ] ;
+    sh:property [
+        sh:path dcterms:title ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Title of the agenda item" ;
+    ] ;
+    sh:property [
+        sh:path dcterms:description ;
+        sh:datatype xsd:string ;
+        sh:description "Detailed description of the agenda item" ;
+    ] ;
+    sh:property [
+        sh:path mto:sequenceNumber ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:description "Order on the agenda" ;
+    ] ;
+    sh:property [
+        sh:path mto:presenter ;
+        sh:node mto:Participant ;
+        sh:description "Person presenting or leading this item" ;
+    ] ;
+    sh:property [
+        sh:path mto:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:description "When discussion of this item started" ;
+    ] ;
+    sh:property [
+        sh:path mto:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:description "When discussion of this item ended" ;
+    ] ;
+    sh:property [
+        sh:path mto:relatedDecision ;
+        sh:node mto:Decision ;
+        sh:description "Decisions made regarding this item" ;
+    ] ;
+    sh:property [
+        sh:path mto:topicClassification ;
+        sh:nodeKind sh:IRI ;
+        sh:description "Classified topic (e.g., Wikidata concept)" ;
+    ] ;
+    sh:property [
+        sh:path mto:status ;
+        sh:in ( "pending" "discussed" "decided" "tabled" "deferred" "completed" ) ;
+        sh:description "Status of the agenda item" ;
+    ] .
+
+mto:Decision a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Decision"@en ;
+    rdfs:comment "A decision made during the meeting"@en ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Unique identifier for the decision" ;
+    ] ;
+    sh:property [
+        sh:path dcterms:title ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Short title of the decision" ;
+    ] ;
+    sh:property [
+        sh:path dcterms:description ;
+        sh:datatype xsd:string ;
+        sh:description "Full description of the decision" ;
+    ] ;
+    sh:property [
+        sh:path mto:decisionType ;
+        sh:in ( "approved" "rejected" "tabled" "deferred" "amended" "withdrawn" ) ;
+        sh:minCount 1 ;
+        sh:description "Type or outcome of the decision" ;
+    ] ;
+    sh:property [
+        sh:path mto:proposedBy ;
+        sh:node mto:Participant ;
+        sh:minCount 1 ;
+        sh:description "Person who proposed the decision" ;
+    ] ;
+    sh:property [
+        sh:path mto:proposedAt ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:description "When the decision was proposed" ;
+    ] ;
+    sh:property [
+        sh:path mto:decidedAt ;
+        sh:datatype xsd:dateTime ;
+        sh:description "When the decision was finalized" ;
+    ] ;
+    sh:property [
+        sh:path mto:hasVote ;
+        sh:node mto:Vote ;
+        sh:description "Voting record if applicable" ;
+    ] ;
+    sh:property [
+        sh:path mto:relatedAgendaItem ;
+        sh:node mto:AgendaItem ;
+        sh:description "Agenda item this decision relates to" ;
+    ] ;
+    sh:property [
+        sh:path mto:hasDiscussion ;
+        sh:node mto:Discussion ;
+        sh:description "Discussion thread leading to this decision" ;
+    ] ;
+    sh:property [
+        sh:path mto:actionItem ;
+        sh:node mto:ActionItem ;
+        sh:description "Action items resulting from this decision" ;
+    ] ;
+    sh:property [
+        sh:path prov:wasDerivedFrom ;
+        sh:node mto:Utterance ;
+        sh:description "Key utterances that led to this decision" ;
+    ] ;
+    sh:property [
+        sh:path mto:rationale ;
+        sh:datatype xsd:string ;
+        sh:description "Reasoning behind the decision" ;
+    ] ;
+    sh:property [
+        sh:path mto:supersedes ;
+        sh:node mto:Decision ;
+        sh:description "Previous decision this supersedes" ;
+    ] .
+
+mto:Vote a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Vote"@en ;
+    rdfs:comment "A voting record for a decision"@en ;
+    sh:property [
+        sh:path mto:voteType ;
+        sh:in ( "voice-vote" "roll-call" "unanimous-consent" "secret-ballot" ) ;
+        sh:minCount 1 ;
+        sh:description "Type of vote conducted" ;
+    ] ;
+    sh:property [
+        sh:path mto:votedAt ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:description "When the vote was conducted" ;
+    ] ;
+    sh:property [
+        sh:path mto:votesFor ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:description "Number of votes in favor" ;
+    ] ;
+    sh:property [
+        sh:path mto:votesAgainst ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:description "Number of votes against" ;
+    ] ;
+    sh:property [
+        sh:path mto:votesAbstain ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:description "Number of abstentions" ;
+    ] ;
+    sh:property [
+        sh:path mto:individualVote ;
+        sh:node mto:IndividualVote ;
+        sh:description "Individual voting records" ;
+    ] ;
+    sh:property [
+        sh:path mto:outcome ;
+        sh:in ( "passed" "failed" "tied" ) ;
+        sh:minCount 1 ;
+        sh:description "Outcome of the vote" ;
+    ] .
+
+mto:IndividualVote a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Individual Vote"@en ;
+    rdfs:comment "An individual person's vote"@en ;
+    sh:property [
+        sh:path mto:voter ;
+        sh:node mto:Participant ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Person who cast the vote" ;
+    ] ;
+    sh:property [
+        sh:path mto:voteValue ;
+        sh:in ( "for" "against" "abstain" "absent" ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "The vote cast" ;
+    ] .
+
+mto:Discussion a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Discussion"@en ;
+    rdfs:comment "A threaded discussion on a topic"@en ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Unique identifier for the discussion" ;
+    ] ;
+    sh:property [
+        sh:path mto:topic ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Topic of discussion" ;
+    ] ;
+    sh:property [
+        sh:path mto:startedAt ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:description "When discussion started" ;
+    ] ;
+    sh:property [
+        sh:path mto:endedAt ;
+        sh:datatype xsd:dateTime ;
+        sh:description "When discussion ended" ;
+    ] ;
+    sh:property [
+        sh:path mto:includesUtterance ;
+        sh:node mto:Utterance ;
+        sh:minCount 1 ;
+        sh:description "Utterances that are part of this discussion" ;
+    ] ;
+    sh:property [
+        sh:path mto:participants ;
+        sh:node mto:Participant ;
+        sh:description "People who participated in this discussion" ;
+    ] ;
+    sh:property [
+        sh:path mto:consensus ;
+        sh:in ( "unanimous" "majority" "no-consensus" "divided" ) ;
+        sh:description "Level of consensus reached" ;
+    ] ;
+    sh:property [
+        sh:path mto:summary ;
+        sh:datatype xsd:string ;
+        sh:description "Summary of the discussion" ;
+    ] .
+
+mto:ActionItem a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Action Item"@en ;
+    rdfs:comment "A task or action to be completed following a decision"@en ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:description "Unique identifier for the action item" ;
+    ] ;
+    sh:property [
+        sh:path dcterms:title ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Description of the action" ;
+    ] ;
+    sh:property [
+        sh:path mto:assignedTo ;
+        sh:node mto:Participant ;
+        sh:minCount 1 ;
+        sh:description "Person(s) responsible for the action" ;
+    ] ;
+    sh:property [
+        sh:path mto:dueDate ;
+        sh:datatype xsd:dateTime ;
+        sh:description "When the action should be completed" ;
+    ] ;
+    sh:property [
+        sh:path mto:priority ;
+        sh:in ( "high" "medium" "low" ) ;
+        sh:description "Priority level" ;
+    ] ;
+    sh:property [
+        sh:path mto:status ;
+        sh:in ( "pending" "in-progress" "completed" "blocked" "cancelled" ) ;
+        sh:description "Current status" ;
+    ] .
+
+mto:Transcript a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Transcript"@en ;
+    rdfs:comment "The complete transcript of a meeting"@en ;
+    sh:property [
+        sh:path rdf:value ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Full transcript text" ;
+    ] ;
+    sh:property [
+        sh:path mto:format ;
+        sh:in ( "plain-text" "markdown" "html" "vtt" "srt" ) ;
+        sh:description "Format of the transcript" ;
+    ] ;
+    sh:property [
+        sh:path mto:generatedBy ;
+        sh:datatype xsd:string ;
+        sh:description "Tool or service that generated the transcript" ;
+    ] ;
+    sh:property [
+        sh:path mto:language ;
+        sh:datatype xsd:language ;
+        sh:description "Primary language of the transcript" ;
+    ] ;
+    sh:property [
+        sh:path mto:confidenceScore ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:description "Overall confidence in transcription accuracy" ;
+    ] .
+
+mto:EntityMention a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Entity Mention"@en ;
+    rdfs:comment "An extracted entity mention linked to a knowledge base"@en ;
+    sh:property [
+        sh:path mto:mentionedIn ;
+        sh:node mto:Utterance ;
+        sh:minCount 1 ;
+        sh:description "Utterance where entity was mentioned" ;
+    ] ;
+    sh:property [
+        sh:path mto:entityUri ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:description "URI of the entity (e.g., Wikidata)" ;
+    ] ;
+    sh:property [
+        sh:path mto:entityLabel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:description "Label of the entity" ;
+    ] ;
+    sh:property [
+        sh:path mto:entityType ;
+        sh:nodeKind sh:IRI ;
+        sh:description "Type of entity (e.g., Person, Organization, Concept)" ;
+    ] ;
+    sh:property [
+        sh:path mto:textSpan ;
+        sh:datatype xsd:string ;
+        sh:description "Exact text that refers to this entity" ;
+    ] ;
+    sh:property [
+        sh:path mto:confidence ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:description "Confidence in entity linking" ;
+    ] .
+
+# ============================================================================
+# RDF-STAR PATTERNS (using << >> syntax)
+# ============================================================================
+
+# Pattern for annotating statements with provenance and confidence
+mto:StatementAnnotationShape a sh:NodeShape ;
+    rdfs:label "Statement Annotation Pattern"@en ;
+    rdfs:comment "Pattern for annotating RDF-star triple statements"@en ;
+    sh:targetClass rdf:Statement ;
+    sh:property [
+        sh:path prov:wasAttributedTo ;
+        sh:node mto:Participant ;
+        sh:description "Who made or asserted this statement" ;
+    ] ;
+    sh:property [
+        sh:path dcterms:created ;
+        sh:datatype xsd:dateTime ;
+        sh:description "When this statement was made" ;
+    ] ;
+    sh:property [
+        sh:path mto:confidence ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:description "Confidence in this statement" ;
+    ] ;
+    sh:property [
+        sh:path mto:sourceUtterance ;
+        sh:node mto:Utterance ;
+        sh:description "Utterance that is the source of this statement" ;
+    ] .
+
+# ============================================================================
+# SHACL RULES FOR DERIVED DATA
+# ============================================================================
+
+# Rule: Calculate meeting duration
+mto:CalculateDurationRule a sh:SPARQLRule ;
+    rdfs:label "Calculate Meeting Duration" ;
+    rdfs:comment "Derives meeting duration from start and end times" ;
+    sh:targetClass mto:Meeting ;
+    sh:construct """
+        PREFIX mto: <http://example.org/meeting-transcript/ontology#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        CONSTRUCT {
+            $this mto:duration ?duration .
+        }
+        WHERE {
+            $this mto:actualStartTime ?start ;
+                  mto:actualEndTime ?end .
+            BIND((xsd:dateTime(?end) - xsd:dateTime(?start)) AS ?duration)
+            FILTER NOT EXISTS { $this mto:duration ?existingDuration }
+        }
+    """ .
+
+# Rule: Calculate relative time for utterances
+mto:CalculateRelativeTimeRule a sh:SPARQLRule ;
+    rdfs:label "Calculate Relative Time for Utterances" ;
+    rdfs:comment "Derives relative time from meeting start" ;
+    sh:targetClass mto:Utterance ;
+    sh:construct """
+        PREFIX mto: <http://example.org/meeting-transcript/ontology#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        CONSTRUCT {
+            $this mto:relativeTime ?relTime .
+        }
+        WHERE {
+            $this mto:timestamp ?utteranceTime .
+            ?meeting mto:hasUtterance $this ;
+                     mto:actualStartTime ?meetingStart .
+            BIND((xsd:dateTime(?utteranceTime) - xsd:dateTime(?meetingStart)) AS ?relTime)
+            FILTER NOT EXISTS { $this mto:relativeTime ?existingRelTime }
+        }
+    """ .
+
+# Rule: Infer discussion participants from utterances
+mto:InferDiscussionParticipantsRule a sh:SPARQLRule ;
+    rdfs:label "Infer Discussion Participants" ;
+    rdfs:comment "Derives discussion participants from utterances" ;
+    sh:targetClass mto:Discussion ;
+    sh:construct """
+        PREFIX mto: <http://example.org/meeting-transcript/ontology#>
+        CONSTRUCT {
+            $this mto:participants ?speaker .
+        }
+        WHERE {
+            $this mto:includesUtterance ?utterance .
+            ?utterance mto:speaker ?speaker .
+            FILTER NOT EXISTS { 
+                $this mto:participants ?speaker 
+            }
+        }
+    """ .
+
+# Rule: Calculate vote totals
+mto:CalculateVoteTotalsRule a sh:SPARQLRule ;
+    rdfs:label "Calculate Vote Totals" ;
+    rdfs:comment "Derives vote counts from individual votes" ;
+    sh:targetClass mto:Vote ;
+    sh:construct """
+        PREFIX mto: <http://example.org/meeting-transcript/ontology#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        CONSTRUCT {
+            $this mto:votesFor ?forCount ;
+                  mto:votesAgainst ?againstCount ;
+                  mto:votesAbstain ?abstainCount .
+        }
+        WHERE {
+            {
+                SELECT (COUNT(?voteFor) AS ?forCount)
+                WHERE {
+                    $this mto:individualVote ?ivFor .
+                    ?ivFor mto:voteValue "for" .
+                }
+            }
+            {
+                SELECT (COUNT(?voteAgainst) AS ?againstCount)
+                WHERE {
+                    $this mto:individualVote ?ivAgainst .
+                    ?ivAgainst mto:voteValue "against" .
+                }
+            }
+            {
+                SELECT (COUNT(?voteAbstain) AS ?abstainCount)
+                WHERE {
+                    $this mto:individualVote ?ivAbstain .
+                    ?ivAbstain mto:voteValue "abstain" .
+                }
+            }
+            FILTER NOT EXISTS { 
+                $this mto:votesFor ?existingFor ;
+                      mto:votesAgainst ?existingAgainst ;
+                      mto:votesAbstain ?existingAbstain
+            }
+        }
+    """ .
+
+# Rule: Determine vote outcome
+mto:DetermineVoteOutcomeRule a sh:SPARQLRule ;
+    rdfs:label "Determine Vote Outcome" ;
+    rdfs:comment "Derives vote outcome from vote counts" ;
+    sh:targetClass mto:Vote ;
+    sh:construct """
+        PREFIX mto: <http://example.org/meeting-transcript/ontology#>
+        CONSTRUCT {
+            $this mto:outcome ?outcome .
+        }
+        WHERE {
+            $this mto:votesFor ?for ;
+                  mto:votesAgainst ?against .
+            BIND(
+                IF(?for > ?against, "passed",
+                IF(?for < ?against, "failed", "tied"))
+                AS ?outcome
+            )
+            FILTER NOT EXISTS { $this mto:outcome ?existingOutcome }
+        }
+    """ .
+
+# Rule: Infer agenda item status from decisions
+mto:InferAgendaStatusRule a sh:SPARQLRule ;
+    rdfs:label "Infer Agenda Item Status" ;
+    rdfs:comment "Updates agenda item status based on related decisions" ;
+    sh:targetClass mto:AgendaItem ;
+    sh:construct """
+        PREFIX mto: <http://example.org/meeting-transcript/ontology#>
+        CONSTRUCT {
+            $this mto:status ?newStatus .
+        }
+        WHERE {
+            $this mto:relatedDecision ?decision .
+            ?decision mto:decisionType ?decType .
+            BIND(
+                IF(?decType = "tabled", "tabled",
+                IF(?decType = "deferred", "deferred",
+                "decided"))
+                AS ?newStatus
+            )
+        }
+    """ .
+
+# ============================================================================
+# VALIDATION RULES
+# ============================================================================
+
+# Ensure meetings have at least one utterance
+mto:MeetingMinimumUtterancesConstraint a sh:NodeShape ;
+    sh:targetClass mto:Meeting ;
+    sh:sparql [
+        sh:message "Meeting must have at least one utterance" ;
+        sh:prefixes mto: ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a mto:Meeting .
+                FILTER NOT EXISTS {
+                    $this mto:hasUtterance ?utterance .
+                }
+            }
+        """ ;
+    ] .
+
+# Ensure decisions have supporting utterances
+mto:DecisionProvenanceConstraint a sh:NodeShape ;
+    sh:targetClass mto:Decision ;
+    sh:sparql [
+        sh:message "Decision must be derived from at least one utterance" ;
+        sh:prefixes mto:, prov: ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a mto:Decision .
+                FILTER NOT EXISTS {
+                    $this prov:wasDerivedFrom ?utterance .
+                    ?utterance a mto:Utterance .
+                }
+            }
+        """ ;
+    ] .
+
+# Ensure timestamp ordering
+mto:TimestampOrderingConstraint a sh:NodeShape ;
+    sh:targetClass mto:Meeting ;
+    sh:sparql [
+        sh:message "Meeting actualStartTime must be before actualEndTime" ;
+        sh:prefixes mto: ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this mto:actualStartTime ?start ;
+                      mto:actualEndTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """ ;
+    ] .
+
+# Ensure utterance timestamps are within meeting bounds
+mto:UtteranceTimeBoundsConstraint a sh:NodeShape ;
+    sh:targetClass mto:Utterance ;
+    sh:sparql [
+        sh:message "Utterance timestamp must be within meeting time bounds" ;
+        sh:prefixes mto: ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                ?meeting mto:hasUtterance $this ;
+                         mto:actualStartTime ?meetingStart ;
+                         mto:actualEndTime ?meetingEnd .
+                $this mto:timestamp ?utteranceTime .
+                FILTER (?utteranceTime < ?meetingStart || ?utteranceTime > ?meetingEnd)
+            }
+        """ ;
+    ] .
+
+# ============================================================================
+# PROPERTIES
+# ============================================================================
+
+mto:scheduledStartTime a rdf:Property ;
+    rdfs:label "scheduled start time" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range xsd:dateTime .
+
+mto:actualStartTime a rdf:Property ;
+    rdfs:label "actual start time" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range xsd:dateTime .
+
+mto:actualEndTime a rdf:Property ;
+    rdfs:label "actual end time" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range xsd:dateTime .
+
+mto:duration a rdf:Property ;
+    rdfs:label "duration" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range xsd:duration .
+
+mto:organizer a rdf:Property ;
+    rdfs:label "organizer" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range mto:Participant .
+
+mto:location a rdf:Property ;
+    rdfs:label "location" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range [ owl:unionOf (mto:VirtualLocation mto:PhysicalLocation) ] .
+
+mto:participant a rdf:Property ;
+    rdfs:label "participant" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range mto:Participant .
+
+mto:hasAgendaItem a rdf:Property ;
+    rdfs:label "has agenda item" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range mto:AgendaItem .
+
+mto:hasUtterance a rdf:Property ;
+    rdfs:label "has utterance" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range mto:Utterance .
+
+mto:hasDecision a rdf:Property ;
+    rdfs:label "has decision" ;
+    rdfs:domain mto:Meeting ;
+    rdfs:range mto:Decision .
+
+mto:speaker a rdf:Property ;
+    rdfs:label "speaker" ;
+    rdfs:domain mto:Utterance ;
+    rdfs:range mto:Participant .
+
+mto:timestamp a rdf:Property ;
+    rdfs:label "timestamp" ;
+    rdfs:domain mto:Utterance ;
+    rdfs:range xsd:dateTime .
+
+mto:relativeTime a rdf:Property ;
+    rdfs:label "relative time" ;
+    rdfs:domain mto:Utterance ;
+    rdfs:range xsd:duration .
+
+mto:intent a rdf:Property ;
+    rdfs:label "intent" ;
+    rdfs:domain mto:Utterance ;
+    rdfs:range mto:Intent .
+
+mto:intentType a rdf:Property ;
+    rdfs:label "intent type" ;
+    rdfs:domain mto:Intent ;
+    rdfs:range xsd:string .
+
+mto:confidence a rdf:Property ;
+    rdfs:label "confidence" ;
+    rdfs:range xsd:decimal .
+
+mto:decisionType a rdf:Property ;
+    rdfs:label "decision type" ;
+    rdfs:domain mto:Decision ;
+    rdfs:range xsd:string .
+
+mto:proposedBy a rdf:Property ;
+    rdfs:label "proposed by" ;
+    rdfs:domain mto:Decision ;
+    rdfs:range mto:Participant .
+
+mto:hasVote a rdf:Property ;
+    rdfs:label "has vote" ;
+    rdfs:domain mto:Decision ;
+    rdfs:range mto:Vote .
+
+mto:mentionsEntity a rdf:Property ;
+    rdfs:label "mentions entity" ;
+    rdfs:domain mto:Utterance ;
+    rdfs:range rdfs:Resource .
+
+mto:entityUri a rdf:Property ;
+    rdfs:label "entity URI" ;
+    rdfs:domain mto:EntityMention ;
+    rdfs:range rdfs:Resource .

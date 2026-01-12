@@ -1,0 +1,748 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
+@prefix mt: <http://example.org/meeting-transcript/> .
+@prefix mto: <http://example.org/meeting-transcript/ontology#> .
+
+# ============================================================================
+# MEETING METADATA
+# ============================================================================
+
+mt:meeting-20260111 a mto:Meeting ;
+    dcterms:identifier "meeting-20260111-product-strategy" ;
+    dcterms:title "Q1 2026 Product Strategy Review" ;
+    mto:scheduledStartTime "2026-01-11T10:00:00-08:00"^^xsd:dateTime ;
+    mto:actualStartTime "2026-01-11T10:02:00-08:00"^^xsd:dateTime ;
+    mto:actualEndTime "2026-01-11T10:40:00-08:00"^^xsd:dateTime ;
+    mto:duration "PT38M"^^xsd:duration ;
+    mto:organizer mt:participant-sarah ;
+    mto:location mt:location-teams-123456789 ;
+    mto:participant mt:participant-sarah,
+                    mt:participant-michael,
+                    mt:participant-jennifer,
+                    mt:participant-david,
+                    mt:participant-lisa ;
+    mto:hasAgendaItem mt:agenda-item-1,
+                      mt:agenda-item-2,
+                      mt:agenda-item-3 ;
+    mto:hasDecision mt:decision-ai-adoption,
+                    mt:decision-budget-allocation,
+                    mt:decision-mobile-timeline ;
+    mto:hasTranscript mt:transcript-20260111 .
+
+# ============================================================================
+# LOCATION
+# ============================================================================
+
+mt:location-teams-123456789 a mto:VirtualLocation ;
+    mto:platform "Teams" ;
+    mto:meetingId "123-456-789" ;
+    mto:accountId "example-company-teams" .
+
+# ============================================================================
+# PARTICIPANTS
+# ============================================================================
+
+mt:participant-sarah a mto:Participant ;
+    foaf:mbox "sarah.johnson@example.com" ;
+    foaf:name "Sarah Johnson" ;
+    schema:jobTitle "VP of Product" ;
+    mto:role "chair" ;
+    mto:attendanceStatus "present" .
+
+mt:participant-michael a mto:Participant ;
+    foaf:mbox "michael.chen@example.com" ;
+    foaf:name "Michael Chen" ;
+    schema:jobTitle "Senior Product Manager" ;
+    mto:role "presenter" ;
+    mto:attendanceStatus "present" .
+
+mt:participant-jennifer a mto:Participant ;
+    foaf:mbox "jennifer.martinez@example.com" ;
+    foaf:name "Jennifer Martinez" ;
+    schema:jobTitle "Engineering Lead" ;
+    mto:role "attendee" ;
+    mto:attendanceStatus "present" .
+
+mt:participant-david a mto:Participant ;
+    foaf:mbox "david.park@example.com" ;
+    foaf:name "David Park" ;
+    schema:jobTitle "Data Scientist" ;
+    mto:role "presenter" ;
+    mto:attendanceStatus "present" .
+
+mt:participant-lisa a mto:Participant ;
+    foaf:mbox "lisa.anderson@example.com" ;
+    foaf:name "Lisa Anderson" ;
+    schema:jobTitle "UX Designer" ;
+    mto:role "presenter" ;
+    mto:attendanceStatus "present" .
+
+# ============================================================================
+# AGENDA ITEMS
+# ============================================================================
+
+mt:agenda-item-1 a mto:AgendaItem ;
+    dcterms:identifier "agenda-1-ai-integration" ;
+    dcterms:title "AI Feature Integration Proposal" ;
+    dcterms:description "Evaluation and decision on adopting Claude by Anthropic for customer support automation" ;
+    mto:sequenceNumber 1 ;
+    mto:presenter mt:participant-michael ;
+    mto:startTime "2026-01-11T10:03:00-08:00"^^xsd:dateTime ;
+    mto:endTime "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:relatedDecision mt:decision-ai-adoption ;
+    mto:topicClassification wd:Q11660 ;  # Artificial intelligence
+    mto:status "decided" .
+
+mt:agenda-item-2 a mto:AgendaItem ;
+    dcterms:identifier "agenda-2-budget" ;
+    dcterms:title "Q1 Budget Allocation" ;
+    dcterms:description "Allocation of $250,000 across three initiatives" ;
+    mto:sequenceNumber 2 ;
+    mto:presenter mt:participant-sarah ;
+    mto:startTime "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:endTime "2026-01-11T10:24:00-08:00"^^xsd:dateTime ;
+    mto:relatedDecision mt:decision-budget-allocation ;
+    mto:topicClassification wd:Q1061324 ;  # Budget
+    mto:status "decided" .
+
+mt:agenda-item-3 a mto:AgendaItem ;
+    dcterms:identifier "agenda-3-mobile-redesign" ;
+    dcterms:title "Mobile App Redesign Timeline" ;
+    dcterms:description "Timeline and phased approach for mobile application redesign" ;
+    mto:sequenceNumber 3 ;
+    mto:presenter mt:participant-lisa ;
+    mto:startTime "2026-01-11T10:24:00-08:00"^^xsd:dateTime ;
+    mto:endTime "2026-01-11T10:37:00-08:00"^^xsd:dateTime ;
+    mto:relatedDecision mt:decision-mobile-timeline ;
+    mto:topicClassification wd:Q1066571 ;  # Mobile application
+    mto:status "decided" .
+
+# ============================================================================
+# UTTERANCES (Sample - showing key utterances)
+# ============================================================================
+
+mt:utterance-001 a mto:Utterance ;
+    dcterms:identifier "utt-001" ;
+    mto:speaker mt:participant-sarah ;
+    mto:timestamp "2026-01-11T10:02:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT0S"^^xsd:duration ;
+    mto:sequenceNumber 1 ;
+    rdf:value "Good morning everyone, thanks for joining. Let's get started. We have three main items on the agenda today: first, the proposed AI feature integration; second, the Q1 budget allocation; and third, timeline for the mobile app redesign. Let's start with the AI feature proposal. Michael, you're leading this one." ;
+    mto:intent mt:intent-001 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:sentiment "neutral" .
+
+mt:intent-001 a mto:Intent ;
+    mto:intentType "procedural" ;
+    mto:confidence 0.95 ;
+    mto:topic "meeting-opening" .
+
+mt:utterance-002 a mto:Utterance ;
+    dcterms:identifier "utt-002" ;
+    mto:speaker mt:participant-michael ;
+    mto:timestamp "2026-01-11T10:03:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT1M"^^xsd:duration ;
+    mto:sequenceNumber 2 ;
+    rdf:value "Thanks Sarah. So, we've been evaluating several large language models for integration into our platform. Based on our analysis, I'm proposing we adopt Claude by Anthropic for our customer support automation. The API costs are reasonable, and the quality of responses is superior to alternatives we tested." ;
+    mto:intent mt:intent-002 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:mentionsEntity wd:Q126418099,  # Claude (AI assistant)
+                       wd:Q108266254 ;  # Anthropic
+    mto:sentiment "positive" .
+
+mt:intent-002 a mto:Intent ;
+    mto:intentType "proposal" ;
+    mto:confidence 0.98 ;
+    mto:topic "ai-integration" .
+
+mt:entity-mention-001 a mto:EntityMention ;
+    mto:mentionedIn mt:utterance-002 ;
+    mto:entityUri wd:Q126418099 ;
+    mto:entityLabel "Claude (AI assistant)" ;
+    mto:entityType wd:Q11660 ;  # AI type
+    mto:textSpan "Claude by Anthropic" ;
+    mto:confidence 0.95 .
+
+mt:entity-mention-002 a mto:EntityMention ;
+    mto:mentionedIn mt:utterance-002 ;
+    mto:entityUri wd:Q108266254 ;
+    mto:entityLabel "Anthropic" ;
+    mto:entityType wd:Q4830453 ;  # Business
+    mto:textSpan "Anthropic" ;
+    mto:confidence 0.98 .
+
+mt:utterance-003 a mto:Utterance ;
+    dcterms:identifier "utt-003" ;
+    mto:speaker mt:participant-jennifer ;
+    mto:timestamp "2026-01-11T10:04:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT2M"^^xsd:duration ;
+    mto:sequenceNumber 3 ;
+    rdf:value "I have concerns about the infrastructure requirements. Do we have the capacity to handle the API load during peak hours? Our current architecture might need significant upgrades." ;
+    mto:intent mt:intent-003 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:responseToUtterance mt:utterance-002 ;
+    mto:sentiment "negative" .
+
+mt:intent-003 a mto:Intent ;
+    mto:intentType "objection" ;
+    mto:confidence 0.92 ;
+    mto:topic "infrastructure-concerns" .
+
+mt:utterance-004 a mto:Utterance ;
+    dcterms:identifier "utt-004" ;
+    mto:speaker mt:participant-david ;
+    mto:timestamp "2026-01-11T10:05:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT3M"^^xsd:duration ;
+    mto:sequenceNumber 4 ;
+    rdf:value "Jennifer raises a good point. I ran some projections using our current traffic data. At peak load, we're looking at approximately 500 API calls per minute. That's well within Anthropic's rate limits, but we'd need to implement proper caching and fallback mechanisms." ;
+    mto:intent mt:intent-004 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:responseToUtterance mt:utterance-003 ;
+    mto:mentionsEntity wd:Q108266254 ;  # Anthropic
+    mto:sentiment "neutral" .
+
+mt:intent-004 a mto:Intent ;
+    mto:intentType "information" ;
+    mto:confidence 0.90 ;
+    mto:topic "technical-analysis" .
+
+mt:utterance-005 a mto:Utterance ;
+    dcterms:identifier "utt-005" ;
+    mto:speaker mt:participant-lisa ;
+    mto:timestamp "2026-01-11T10:07:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT5M"^^xsd:duration ;
+    mto:sequenceNumber 5 ;
+    rdf:value "From a UX perspective, I'd like us to ensure we're transparent with users about when they're interacting with AI versus human agents. We should follow ethical AI principles here." ;
+    mto:intent mt:intent-005 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:sentiment "neutral" .
+
+mt:intent-005 a mto:Intent ;
+    mto:intentType "clarification" ;
+    mto:confidence 0.88 ;
+    mto:topic "ethical-considerations" .
+
+mt:utterance-006 a mto:Utterance ;
+    dcterms:identifier "utt-006" ;
+    mto:speaker mt:participant-sarah ;
+    mto:timestamp "2026-01-11T10:09:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT7M"^^xsd:duration ;
+    mto:sequenceNumber 6 ;
+    rdf:value "Okay, let me propose this formally: We adopt Claude for customer support automation with the following conditions - implement proper disclosure, provide human escalation options, and Jennifer's team gets two weeks to assess and document infrastructure requirements before we proceed. Can we vote on this?" ;
+    mto:intent mt:intent-006 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:mentionsEntity wd:Q126418099 ;  # Claude
+    mto:sentiment "positive" .
+
+mt:intent-006 a mto:Intent ;
+    mto:intentType "motion" ;
+    mto:confidence 0.97 ;
+    mto:topic "formal-proposal" .
+
+mt:utterance-007 a mto:Utterance ;
+    dcterms:identifier "utt-007" ;
+    mto:speaker mt:participant-michael ;
+    mto:timestamp "2026-01-11T10:09:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT7M"^^xsd:duration ;
+    mto:sequenceNumber 7 ;
+    rdf:value "I vote in favor." ;
+    mto:intent mt:intent-007 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:sentiment "positive" .
+
+mt:intent-007 a mto:Intent ;
+    mto:intentType "vote-call" ;
+    mto:confidence 0.99 ;
+    mto:topic "voting" .
+
+mt:utterance-008 a mto:Utterance ;
+    dcterms:identifier "utt-008" ;
+    mto:speaker mt:participant-jennifer ;
+    mto:timestamp "2026-01-11T10:10:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT8M"^^xsd:duration ;
+    mto:sequenceNumber 8 ;
+    rdf:value "I vote in favor, with the caveat that we delay launch if infrastructure concerns aren't resolved." ;
+    mto:intent mt:intent-008 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:sentiment "mixed" .
+
+mt:intent-008 a mto:Intent ;
+    mto:intentType "vote-call" ;
+    mto:confidence 0.99 ;
+    mto:topic "voting" .
+
+mt:utterance-009 a mto:Utterance ;
+    dcterms:identifier "utt-009" ;
+    mto:speaker mt:participant-david ;
+    mto:timestamp "2026-01-11T10:10:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT8M"^^xsd:duration ;
+    mto:sequenceNumber 9 ;
+    rdf:value "In favor." ;
+    mto:intent mt:intent-009 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:sentiment "positive" .
+
+mt:intent-009 a mto:Intent ;
+    mto:intentType "vote-call" ;
+    mto:confidence 0.99 ;
+    mto:topic "voting" .
+
+mt:utterance-010 a mto:Utterance ;
+    dcterms:identifier "utt-010" ;
+    mto:speaker mt:participant-lisa ;
+    mto:timestamp "2026-01-11T10:10:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT8M"^^xsd:duration ;
+    mto:sequenceNumber 10 ;
+    rdf:value "In favor." ;
+    mto:intent mt:intent-010 ;
+    mto:relatedToAgenda mt:agenda-item-1 ;
+    mto:sentiment "positive" .
+
+mt:intent-010 a mto:Intent ;
+    mto:intentType "vote-call" ;
+    mto:confidence 0.99 ;
+    mto:topic "voting" .
+
+mt:utterance-011 a mto:Utterance ;
+    dcterms:identifier "utt-011" ;
+    mto:speaker mt:participant-david ;
+    mto:timestamp "2026-01-11T10:12:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT10M"^^xsd:duration ;
+    mto:sequenceNumber 11 ;
+    rdf:value "Yes. I'm requesting $80,000 for a comprehensive analytics dashboard that would integrate with our data warehouse. This would use tools like Apache Superset or Tableau for visualization. The dashboard would track key metrics including user engagement, conversion rates, and feature adoption." ;
+    mto:intent mt:intent-011 ;
+    mto:relatedToAgenda mt:agenda-item-2 ;
+    mto:mentionsEntity wd:Q110283261,  # Apache Superset
+                       wd:Q7672640 ;    # Tableau Software
+    mto:sentiment "positive" .
+
+mt:intent-011 a mto:Intent ;
+    mto:intentType "proposal" ;
+    mto:confidence 0.95 ;
+    mto:topic "analytics-dashboard" .
+
+mt:entity-mention-003 a mto:EntityMention ;
+    mto:mentionedIn mt:utterance-011 ;
+    mto:entityUri wd:Q110283261 ;
+    mto:entityLabel "Apache Superset" ;
+    mto:entityType wd:Q7397 ;  # Software
+    mto:textSpan "Apache Superset" ;
+    mto:confidence 0.92 .
+
+mt:entity-mention-004 a mto:EntityMention ;
+    mto:mentionedIn mt:utterance-011 ;
+    mto:entityUri wd:Q7672640 ;
+    mto:entityLabel "Tableau Software" ;
+    mto:entityType wd:Q7397 ;  # Software
+    mto:textSpan "Tableau" ;
+    mto:confidence 0.95 .
+
+mt:utterance-012 a mto:Utterance ;
+    dcterms:identifier "utt-012" ;
+    mto:speaker mt:participant-michael ;
+    mto:timestamp "2026-01-11T10:19:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT17M"^^xsd:duration ;
+    mto:sequenceNumber 12 ;
+    rdf:value "Could we potentially table the analytics dashboard and allocate that budget to mobile? The dashboard, while useful, isn't customer-facing." ;
+    mto:intent mt:intent-012 ;
+    mto:relatedToAgenda mt:agenda-item-2 ;
+    mto:sentiment "neutral" .
+
+mt:intent-012 a mto:Intent ;
+    mto:intentType "amendment" ;
+    mto:confidence 0.90 ;
+    mto:topic "budget-reallocation" .
+
+mt:utterance-013 a mto:Utterance ;
+    dcterms:identifier "utt-013" ;
+    mto:speaker mt:participant-david ;
+    mto:timestamp "2026-01-11T10:20:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT18M"^^xsd:duration ;
+    mto:sequenceNumber 13 ;
+    rdf:value "I disagree strongly. Without proper analytics, we're flying blind. We won't know if the AI integration or mobile redesign are actually successful. This is a strategic investment in decision-making capability." ;
+    mto:intent mt:intent-013 ;
+    mto:relatedToAgenda mt:agenda-item-2 ;
+    mto:responseToUtterance mt:utterance-012 ;
+    mto:sentiment "negative" .
+
+mt:intent-013 a mto:Intent ;
+    mto:intentType "objection" ;
+    mto:confidence 0.95 ;
+    mto:topic "analytics-defense" .
+
+mt:utterance-014 a mto:Utterance ;
+    dcterms:identifier "utt-014" ;
+    mto:speaker mt:participant-lisa ;
+    mto:timestamp "2026-01-11T10:33:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT31M"^^xsd:duration ;
+    mto:sequenceNumber 14 ;
+    rdf:value "I'd argue against that. Our mobile ratings are hurting app store visibility. Every month we delay costs us potential users. The negative reviews are starting to mention competitors by name, particularly Notion and Asana." ;
+    mto:intent mt:intent-014 ;
+    mto:relatedToAgenda mt:agenda-item-3 ;
+    mto:mentionsEntity wd:Q28406404,  # Notion (software)
+                       wd:Q4807245 ;   # Asana (software)
+    mto:sentiment "negative" .
+
+mt:intent-014 a mto:Intent ;
+    mto:intentType "support" ;
+    mto:confidence 0.93 ;
+    mto:topic "mobile-urgency" .
+
+mt:entity-mention-005 a mto:EntityMention ;
+    mto:mentionedIn mt:utterance-014 ;
+    mto:entityUri wd:Q28406404 ;
+    mto:entityLabel "Notion" ;
+    mto:entityType wd:Q7397 ;  # Software
+    mto:textSpan "Notion" ;
+    mto:confidence 0.97 .
+
+mt:entity-mention-006 a mto:EntityMention ;
+    mto:mentionedIn mt:utterance-014 ;
+    mto:entityUri wd:Q4807245 ;
+    mto:entityLabel "Asana" ;
+    mto:entityType wd:Q7397 ;  # Software
+    mto:textSpan "Asana" ;
+    mto:confidence 0.97 .
+
+mt:utterance-015 a mto:Utterance ;
+    dcterms:identifier "utt-015" ;
+    mto:speaker mt:participant-david ;
+    mto:timestamp "2026-01-11T10:38:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT36M"^^xsd:duration ;
+    mto:sequenceNumber 15 ;
+    rdf:value "One quick item - I'd like to propose we standardize on Python for all data science work. Currently we have a mix of R and Python, and it's creating maintenance issues." ;
+    mto:intent mt:intent-015 ;
+    mto:mentionsEntity wd:Q28865,     # Python
+                       wd:Q206904 ;   # R (programming language)
+    mto:sentiment "neutral" .
+
+mt:intent-015 a mto:Intent ;
+    mto:intentType "proposal" ;
+    mto:confidence 0.96 ;
+    mto:topic "technical-standardization" .
+
+mt:entity-mention-007 a mto:EntityMention ;
+    mto:mentionedIn mt:utterance-015 ;
+    mto:entityUri wd:Q28865 ;
+    mto:entityLabel "Python" ;
+    mto:entityType wd:Q9143 ;  # Programming language
+    mto:textSpan "Python" ;
+    mto:confidence 0.99 .
+
+mt:entity-mention-008 a mto:EntityMention ;
+    mto:mentionedIn mt:utterance-015 ;
+    mto:entityUri wd:Q206904 ;
+    mto:entityLabel "R" ;
+    mto:entityType wd:Q9143 ;  # Programming language
+    mto:textSpan "R" ;
+    mto:confidence 0.99 .
+
+mt:utterance-016 a mto:Utterance ;
+    dcterms:identifier "utt-016" ;
+    mto:speaker mt:participant-sarah ;
+    mto:timestamp "2026-01-11T10:39:00-08:00"^^xsd:dateTime ;
+    mto:relativeTime "PT37M"^^xsd:duration ;
+    mto:sequenceNumber 16 ;
+    rdf:value "That's a good point, but we're out of time today. Let's table that discussion for our next meeting. Add it to the agenda." ;
+    mto:intent mt:intent-016 ;
+    mto:responseToUtterance mt:utterance-015 ;
+    mto:sentiment "neutral" .
+
+mt:intent-016 a mto:Intent ;
+    mto:intentType "procedural" ;
+    mto:confidence 0.97 ;
+    mto:topic "tabling-discussion" .
+
+# ============================================================================
+# DISCUSSIONS
+# ============================================================================
+
+mt:discussion-ai-integration a mto:Discussion ;
+    dcterms:identifier "disc-ai-integration" ;
+    mto:topic "AI Feature Integration for Customer Support" ;
+    mto:startedAt "2026-01-11T10:03:00-08:00"^^xsd:dateTime ;
+    mto:endedAt "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:includesUtterance mt:utterance-002,
+                          mt:utterance-003,
+                          mt:utterance-004,
+                          mt:utterance-005,
+                          mt:utterance-006 ;
+    mto:participants mt:participant-michael,
+                     mt:participant-jennifer,
+                     mt:participant-david,
+                     mt:participant-lisa,
+                     mt:participant-sarah ;
+    mto:consensus "unanimous" ;
+    mto:summary "Team unanimously agreed to adopt Claude for customer support automation with conditions for disclosure, human escalation, and infrastructure assessment." .
+
+mt:discussion-budget a mto:Discussion ;
+    dcterms:identifier "disc-budget" ;
+    mto:topic "Q1 Budget Allocation Strategy" ;
+    mto:startedAt "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:endedAt "2026-01-11T10:24:00-08:00"^^xsd:dateTime ;
+    mto:includesUtterance mt:utterance-011,
+                          mt:utterance-012,
+                          mt:utterance-013 ;
+    mto:participants mt:participant-david,
+                     mt:participant-michael,
+                     mt:participant-jennifer,
+                     mt:participant-sarah ;
+    mto:consensus "majority" ;
+    mto:summary "Budget allocated with phased approach for analytics dashboard, reduced AI integration budget, and constrained mobile redesign budget with contingency fund." .
+
+mt:discussion-mobile a mto:Discussion ;
+    dcterms:identifier "disc-mobile" ;
+    mto:topic "Mobile App Redesign Timeline and Approach" ;
+    mto:startedAt "2026-01-11T10:24:00-08:00"^^xsd:dateTime ;
+    mto:endedAt "2026-01-11T10:37:00-08:00"^^xsd:dateTime ;
+    mto:includesUtterance mt:utterance-014 ;
+    mto:participants mt:participant-lisa,
+                     mt:participant-michael,
+                     mt:participant-jennifer,
+                     mt:participant-david,
+                     mt:participant-sarah ;
+    mto:consensus "majority" ;
+    mto:summary "Approved phased approach with Android launch in April and iOS in June, with February checkpoint meeting scheduled." .
+
+# ============================================================================
+# DECISIONS
+# ============================================================================
+
+mt:decision-ai-adoption a mto:Decision ;
+    dcterms:identifier "dec-ai-adoption" ;
+    dcterms:title "Adopt Claude for Customer Support Automation" ;
+    dcterms:description "Adopt Claude by Anthropic for customer support automation with proper disclosure, human escalation options, and infrastructure assessment requirements" ;
+    mto:decisionType "approved" ;
+    mto:proposedBy mt:participant-michael ;
+    mto:proposedAt "2026-01-11T10:03:00-08:00"^^xsd:dateTime ;
+    mto:decidedAt "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:hasVote mt:vote-ai-adoption ;
+    mto:relatedAgendaItem mt:agenda-item-1 ;
+    mto:hasDiscussion mt:discussion-ai-integration ;
+    mto:actionItem mt:action-infrastructure-assessment ;
+    prov:wasDerivedFrom mt:utterance-002,
+                        mt:utterance-004,
+                        mt:utterance-005,
+                        mt:utterance-006 ;
+    mto:rationale "Claude provides superior response quality at reasonable cost (estimated $8-15K/month), 30% less than current human support costs. Infrastructure capacity confirmed at 500 API calls/minute within rate limits. Ethical considerations addressed through disclosure and human escalation options." .
+
+mt:vote-ai-adoption a mto:Vote ;
+    mto:voteType "voice-vote" ;
+    mto:votedAt "2026-01-11T10:09:00-08:00"^^xsd:dateTime ;
+    mto:votesFor 4 ;
+    mto:votesAgainst 0 ;
+    mto:votesAbstain 0 ;
+    mto:individualVote mt:individual-vote-001,
+                       mt:individual-vote-002,
+                       mt:individual-vote-003,
+                       mt:individual-vote-004 ;
+    mto:outcome "passed" .
+
+mt:individual-vote-001 a mto:IndividualVote ;
+    mto:voter mt:participant-michael ;
+    mto:voteValue "for" .
+
+mt:individual-vote-002 a mto:IndividualVote ;
+    mto:voter mt:participant-jennifer ;
+    mto:voteValue "for" .
+
+mt:individual-vote-003 a mto:IndividualVote ;
+    mto:voter mt:participant-david ;
+    mto:voteValue "for" .
+
+mt:individual-vote-004 a mto:IndividualVote ;
+    mto:voter mt:participant-lisa ;
+    mto:voteValue "for" .
+
+mt:decision-budget-allocation a mto:Decision ;
+    dcterms:identifier "dec-budget" ;
+    dcterms:title "Q1 Budget Allocation" ;
+    dcterms:description "Allocate $250,000 as follows: $40,000 for analytics dashboard (Phase 1), $85,000 for AI integration, $105,000 for mobile redesign, $20,000 contingency" ;
+    mto:decisionType "approved" ;
+    mto:proposedBy mt:participant-sarah ;
+    mto:proposedAt "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:decidedAt "2026-01-11T10:24:00-08:00"^^xsd:dateTime ;
+    mto:hasVote mt:vote-budget ;
+    mto:relatedAgendaItem mt:agenda-item-2 ;
+    mto:hasDiscussion mt:discussion-budget ;
+    mto:actionItem mt:action-analytics-planning ;
+    prov:wasDerivedFrom mt:utterance-011,
+                        mt:utterance-013 ;
+    mto:rationale "Phased approach balances competing priorities. Analytics dashboard essential for measuring success of other initiatives. Contingency fund addresses typical budget overruns. Mobile budget constrained but achievable through feature prioritization and phased release." .
+
+mt:vote-budget a mto:Vote ;
+    mto:voteType "voice-vote" ;
+    mto:votedAt "2026-01-11T10:23:00-08:00"^^xsd:dateTime ;
+    mto:votesFor 4 ;
+    mto:votesAgainst 0 ;
+    mto:votesAbstain 0 ;
+    mto:individualVote mt:individual-vote-005,
+                       mt:individual-vote-006,
+                       mt:individual-vote-007,
+                       mt:individual-vote-008 ;
+    mto:outcome "passed" .
+
+mt:individual-vote-005 a mto:IndividualVote ;
+    mto:voter mt:participant-michael ;
+    mto:voteValue "for" .
+
+mt:individual-vote-006 a mto:IndividualVote ;
+    mto:voter mt:participant-jennifer ;
+    mto:voteValue "for" .
+
+mt:individual-vote-007 a mto:IndividualVote ;
+    mto:voter mt:participant-david ;
+    mto:voteValue "for" .
+
+mt:individual-vote-008 a mto:IndividualVote ;
+    mto:voter mt:participant-lisa ;
+    mto:voteValue "for" .
+
+mt:decision-mobile-timeline a mto:Decision ;
+    dcterms:identifier "dec-mobile-timeline" ;
+    dcterms:title "Mobile App Redesign Timeline Approval" ;
+    dcterms:description "Approve phased rollout: Android launch April 2026, iOS launch June 2026, with February checkpoint meeting" ;
+    mto:decisionType "approved" ;
+    mto:proposedBy mt:participant-lisa ;
+    mto:proposedAt "2026-01-11T10:25:00-08:00"^^xsd:dateTime ;
+    mto:decidedAt "2026-01-11T10:37:00-08:00"^^xsd:dateTime ;
+    mto:relatedAgendaItem mt:agenda-item-3 ;
+    mto:hasDiscussion mt:discussion-mobile ;
+    mto:actionItem mt:action-schedule-checkpoint ;
+    prov:wasDerivedFrom mt:utterance-014 ;
+    mto:rationale "Current 3.2 star rating hurting app store visibility. Competitors (Notion, Asana) being mentioned in negative reviews. Urgency justifies proceeding despite budget constraints. Phased approach allows feedback incorporation between Android and iOS releases." .
+
+mt:decision-python-standardization a mto:Decision ;
+    dcterms:identifier "dec-python-tabled" ;
+    dcterms:title "Python Standardization Proposal" ;
+    dcterms:description "Standardize on Python for all data science work" ;
+    mto:decisionType "tabled" ;
+    mto:proposedBy mt:participant-david ;
+    mto:proposedAt "2026-01-11T10:38:00-08:00"^^xsd:dateTime ;
+    prov:wasDerivedFrom mt:utterance-015,
+                        mt:utterance-016 ;
+    mto:rationale "Time constraints prevented discussion. To be added to next meeting agenda." .
+
+# ============================================================================
+# ACTION ITEMS
+# ============================================================================
+
+mt:action-infrastructure-assessment a mto:ActionItem ;
+    dcterms:identifier "action-infra-assess" ;
+    dcterms:title "AI Infrastructure Assessment" ;
+    mto:assignedTo mt:participant-jennifer, mt:participant-michael ;
+    mto:dueDate "2026-01-25T17:00:00-08:00"^^xsd:dateTime ;
+    mto:priority "high" ;
+    mto:status "pending" .
+
+mt:action-analytics-planning a mto:ActionItem ;
+    dcterms:identifier "action-analytics-plan" ;
+    dcterms:title "Begin Phase 1 Analytics Dashboard Planning" ;
+    mto:assignedTo mt:participant-david ;
+    mto:dueDate "2026-01-18T17:00:00-08:00"^^xsd:dateTime ;
+    mto:priority "medium" ;
+    mto:status "pending" .
+
+mt:action-schedule-checkpoint a mto:ActionItem ;
+    dcterms:identifier "action-checkpoint" ;
+    dcterms:title "Schedule February Checkpoint Meeting" ;
+    mto:assignedTo mt:participant-jennifer ;
+    mto:dueDate "2026-01-15T17:00:00-08:00"^^xsd:dateTime ;
+    mto:priority "low" ;
+    mto:status "pending" .
+
+# ============================================================================
+# TRANSCRIPT
+# ============================================================================
+
+mt:transcript-20260111 a mto:Transcript ;
+    rdf:value """[Full transcript content would be stored here]""" ;
+    mto:format "plain-text" ;
+    mto:generatedBy "Microsoft Teams" ;
+    mto:language "en" ;
+    mto:confidenceScore 0.92 .
+
+# ============================================================================
+# RDF-STAR ANNOTATIONS
+# ============================================================================
+
+# Annotating key decision provenance with RDF-Star
+<<mt:decision-ai-adoption mto:decisionType "approved">> 
+    prov:wasAttributedTo mt:participant-sarah ;
+    dcterms:created "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:confidence 1.0 ;
+    mto:sourceUtterance mt:utterance-006 .
+
+<<mt:decision-ai-adoption mto:rationale "Claude provides superior response quality at reasonable cost (estimated $8-15K/month), 30% less than current human support costs. Infrastructure capacity confirmed at 500 API calls/minute within rate limits. Ethical considerations addressed through disclosure and human escalation options.">>
+    prov:wasAttributedTo mt:participant-michael, mt:participant-david, mt:participant-lisa ;
+    dcterms:created "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:confidence 0.95 .
+
+<<mt:decision-budget-allocation mto:decisionType "approved">>
+    prov:wasAttributedTo mt:participant-sarah ;
+    dcterms:created "2026-01-11T10:24:00-08:00"^^xsd:dateTime ;
+    mto:confidence 1.0 .
+
+<<mt:decision-python-standardization mto:decisionType "tabled">>
+    prov:wasAttributedTo mt:participant-sarah ;
+    dcterms:created "2026-01-11T10:39:00-08:00"^^xsd:dateTime ;
+    mto:confidence 1.0 ;
+    mto:sourceUtterance mt:utterance-016 .
+
+# Annotating entity mentions with confidence scores
+<<mt:utterance-002 mto:mentionsEntity wd:Q126418099>>
+    mto:confidence 0.95 ;
+    prov:wasAttributedTo mt:participant-michael ;
+    dcterms:created "2026-01-11T10:03:00-08:00"^^xsd:dateTime .
+
+<<mt:utterance-014 mto:mentionsEntity wd:Q28406404>>
+    mto:confidence 0.97 ;
+    prov:wasAttributedTo mt:participant-lisa ;
+    dcterms:created "2026-01-11T10:33:00-08:00"^^xsd:dateTime .
+
+<<mt:utterance-014 mto:mentionsEntity wd:Q4807245>>
+    mto:confidence 0.97 ;
+    prov:wasAttributedTo mt:participant-lisa ;
+    dcterms:created "2026-01-11T10:33:00-08:00"^^xsd:dateTime .
+
+# Annotating vote outcome derivation
+<<mt:vote-ai-adoption mto:outcome "passed">>
+    prov:wasDerivedFrom mt:individual-vote-001, mt:individual-vote-002, mt:individual-vote-003, mt:individual-vote-004 ;
+    dcterms:created "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:confidence 1.0 .
+
+<<mt:vote-budget mto:outcome "passed">>
+    prov:wasDerivedFrom mt:individual-vote-005, mt:individual-vote-006, mt:individual-vote-007, mt:individual-vote-008 ;
+    dcterms:created "2026-01-11T10:24:00-08:00"^^xsd:dateTime ;
+    mto:confidence 1.0 .
+
+# Annotating intent classifications
+<<mt:utterance-002 mto:intent mt:intent-002>>
+    mto:confidence 0.98 ;
+    dcterms:created "2026-01-11T10:03:00-08:00"^^xsd:dateTime .
+
+<<mt:utterance-003 mto:intent mt:intent-003>>
+    mto:confidence 0.92 ;
+    dcterms:created "2026-01-11T10:04:00-08:00"^^xsd:dateTime .
+
+<<mt:utterance-006 mto:intent mt:intent-006>>
+    mto:confidence 0.97 ;
+    dcterms:created "2026-01-11T10:09:00-08:00"^^xsd:dateTime .
+
+# Annotating discussion consensus
+<<mt:discussion-ai-integration mto:consensus "unanimous">>
+    prov:wasDerivedFrom mt:vote-ai-adoption ;
+    dcterms:created "2026-01-11T10:11:00-08:00"^^xsd:dateTime ;
+    mto:confidence 1.0 .
+
+<<mt:discussion-budget mto:consensus "majority">>
+    prov:wasDerivedFrom mt:vote-budget ;
+    dcterms:created "2026-01-11T10:24:00-08:00"^^xsd:dateTime ;
+    mto:confidence 1.0 .

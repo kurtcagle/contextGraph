@@ -1,0 +1,35 @@
+ORIGINAL PROJECT PROMPT
+========================
+
+Using https://www.w3.org/TR/shacl12-core/, create a comprehensive SHACL ontology for converting meeting transcriptions into RDF summaries. 
+
+This would need to handle:
+- Determining speakers (use emails as a primary identifier)
+- When a comment is made
+- Where a meeting occurs (assume an online address tied into a telepresence account such as Teams or Google Meet)
+- Who called the meeting
+- And so forth
+
+It also will need to analyse text to determine:
+- Intent of statements
+- Any discussion and resolutions
+- Tabling, or voting down specific decisions
+- Topical intent
+- Any specific entity extraction that can be used with an active taxonomy (assume Wikidata as a taxonomy model)
+
+The intent of this schema is to create a foundation for tracing decision making through an organisation.
+
+Requirements:
+- Use RDF-Star liberally to simplify structuring
+- Assume both a timestamp, current relative time and xsd:dateTime indicator for tracking time
+- This is a foundational schema, but can incorporate SHACL rules as necessary for computational purposes
+
+Deliverables:
+1. Generate the SHACL schema
+2. Create a sample transcript showing a few different decision making and discussion scenarios
+3. Using the derived SHACL schema, generate a corresponding RDF Turtle file holding that scenario as RDF in the associated schema
+
+Context:
+- User works primarily with W3C RDF stack - Turtle, SPARQL, SHACL
+- User is a developer working typically in conjunction with either NodeJS or Python
+- User is typically looking to develop conversion and parsing tools

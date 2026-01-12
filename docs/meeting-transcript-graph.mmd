@@ -1,0 +1,249 @@
+graph LR
+    %% ============================================================================
+    %% Meeting Transcript Ontology - Knowledge Graph Visualization
+    %% ============================================================================
+    
+    %% Meeting Node
+    meeting["<b>Meeting</b><br/>Q1 2026 Product Strategy Review<br/>2026-01-11 10:02-10:40"]:::meetingStyle
+    
+    %% Location
+    location["<b>VirtualLocation</b><br/>Microsoft Teams<br/>Meeting ID: 123-456-789"]:::locationStyle
+    
+    %% Participants
+    sarah["<b>Participant</b><br/>Sarah Johnson<br/>sarah.johnson@example.com"]:::participantStyle
+    michael["<b>Participant</b><br/>Michael Chen<br/>michael.chen@example.com"]:::participantStyle
+    jennifer["<b>Participant</b><br/>Jennifer Martinez<br/>jennifer.martinez@example.com"]:::participantStyle
+    david["<b>Participant</b><br/>David Park<br/>david.park@example.com"]:::participantStyle
+    lisa["<b>Participant</b><br/>Lisa Anderson<br/>lisa.anderson@example.com"]:::participantStyle
+    
+    %% Agenda Items
+    agenda1["<b>AgendaItem</b><br/>AI Feature Integration<br/>Status: decided"]:::agendaStyle
+    agenda2["<b>AgendaItem</b><br/>Q1 Budget Allocation<br/>Status: decided"]:::agendaStyle
+    agenda3["<b>AgendaItem</b><br/>Mobile App Redesign<br/>Status: decided"]:::agendaStyle
+    
+    %% Key Utterances
+    utt001["Utterance #1<br/>Sarah: Meeting opening<br/>10:02:00 PT0S"]:::utteranceStyle
+    utt002["Utterance #2<br/>Michael: AI Proposal<br/>10:03:00 PT1M"]:::utteranceStyle
+    utt003["Utterance #3<br/>Jennifer: Infrastructure concerns<br/>10:04:00 PT2M"]:::utteranceStyle
+    utt006["Utterance #6<br/>Sarah: Formal motion<br/>10:09:00 PT7M"]:::utteranceStyle
+    utt007["Utterance #7<br/>Michael: Vote in favor<br/>10:09:00 PT7M"]:::utteranceStyle
+    utt011["Utterance #11<br/>David: Analytics proposal<br/>10:12:00 PT10M"]:::utteranceStyle
+    utt012["Utterance #12<br/>Michael: Budget concern<br/>10:19:00 PT17M"]:::utteranceStyle
+    utt015["Utterance #15<br/>David: Python standardization<br/>10:38:00 PT36M"]:::utteranceStyle
+    utt016["Utterance #16<br/>Sarah: Table discussion<br/>10:39:00 PT37M"]:::utteranceStyle
+    
+    %% Intents
+    intent001["<b>Intent</b><br/>Type: procedural<br/>Confidence: 0.95"]:::intentStyle
+    intent002["<b>Intent</b><br/>Type: proposal<br/>Confidence: 0.98"]:::intentStyle
+    intent003["<b>Intent</b><br/>Type: objection<br/>Confidence: 0.92"]:::intentStyle
+    intent006["<b>Intent</b><br/>Type: motion<br/>Confidence: 0.97"]:::intentStyle
+    intent007["<b>Intent</b><br/>Type: vote-call<br/>Confidence: 0.99"]:::intentStyle
+    intent015["<b>Intent</b><br/>Type: proposal<br/>Confidence: 0.96"]:::intentStyle
+    intent016["<b>Intent</b><br/>Type: procedural<br/>Confidence: 0.97"]:::intentStyle
+    
+    %% Decisions
+    dec1["<b>Decision</b><br/>Adopt Claude for Support<br/>Type: approved"]:::decisionStyle
+    dec2["<b>Decision</b><br/>Q1 Budget Allocation<br/>Type: approved"]:::decisionStyle
+    dec3["<b>Decision</b><br/>Mobile Timeline<br/>Type: approved"]:::decisionStyle
+    dec4["<b>Decision</b><br/>Python Standardization<br/>Type: tabled"]:::tabledStyle
+    
+    %% Votes
+    vote1["<b>Vote</b><br/>Voice vote<br/>For: 4, Against: 0<br/>Outcome: passed"]:::voteStyle
+    vote2["<b>Vote</b><br/>Voice vote<br/>For: 4, Against: 0<br/>Outcome: passed"]:::voteStyle
+    
+    %% Individual Votes
+    ivote1["<b>IndividualVote</b><br/>Michael: for"]:::individualVoteStyle
+    ivote2["<b>IndividualVote</b><br/>Jennifer: for"]:::individualVoteStyle
+    ivote3["<b>IndividualVote</b><br/>David: for"]:::individualVoteStyle
+    ivote4["<b>IndividualVote</b><br/>Lisa: for"]:::individualVoteStyle
+    
+    %% Discussions
+    disc1["<b>Discussion</b><br/>AI Integration<br/>Consensus: unanimous"]:::discussionStyle
+    disc2["<b>Discussion</b><br/>Budget Allocation<br/>Consensus: majority"]:::discussionStyle
+    disc3["<b>Discussion</b><br/>Mobile Redesign<br/>Consensus: majority"]:::discussionStyle
+    
+    %% Entity Mentions
+    entity1["<b>EntityMention</b><br/>Claude Q126418099<br/>Confidence: 0.95"]:::entityStyle
+    entity2["<b>EntityMention</b><br/>Anthropic Q108266254<br/>Confidence: 0.98"]:::entityStyle
+    entity3["<b>EntityMention</b><br/>Notion Q28406404<br/>Confidence: 0.97"]:::entityStyle
+    entity4["<b>EntityMention</b><br/>Python Q28865<br/>Confidence: 0.99"]:::entityStyle
+    
+    %% Wikidata Entities
+    wd1["<b>Wikidata</b><br/>Claude AI Assistant<br/>Q126418099"]:::wikidataStyle
+    wd2["<b>Wikidata</b><br/>Anthropic<br/>Q108266254"]:::wikidataStyle
+    wd3["<b>Wikidata</b><br/>Notion Software<br/>Q28406404"]:::wikidataStyle
+    wd4["<b>Wikidata</b><br/>Python Language<br/>Q28865"]:::wikidataStyle
+    
+    %% Action Items
+    action1["<b>ActionItem</b><br/>Infrastructure Assessment<br/>Assigned: Jennifer, Michael<br/>Priority: high"]:::actionStyle
+    action2["<b>ActionItem</b><br/>Analytics Planning<br/>Assigned: David<br/>Priority: medium"]:::actionStyle
+    action3["<b>ActionItem</b><br/>Schedule Checkpoint<br/>Assigned: Jennifer<br/>Priority: low"]:::actionStyle
+    
+    %% Transcript
+    transcript["<b>Transcript</b><br/>Plain text format<br/>Language: en<br/>Confidence: 0.92"]:::transcriptStyle
+    
+    %% ============================================================================
+    %% RELATIONSHIPS
+    %% ============================================================================
+    
+    %% Meeting Core Relationships
+    meeting -->|mto:location| location
+    meeting -->|mto:organizer| sarah
+    meeting -->|mto:participant| sarah
+    meeting -->|mto:participant| michael
+    meeting -->|mto:participant| jennifer
+    meeting -->|mto:participant| david
+    meeting -->|mto:participant| lisa
+    meeting -->|mto:hasTranscript| transcript
+    
+    %% Agenda Relationships
+    meeting -->|mto:hasAgendaItem| agenda1
+    meeting -->|mto:hasAgendaItem| agenda2
+    meeting -->|mto:hasAgendaItem| agenda3
+    agenda1 -->|mto:presenter| michael
+    agenda2 -->|mto:presenter| sarah
+    agenda3 -->|mto:presenter| lisa
+    
+    %% Utterance Relationships
+    meeting -->|mto:hasUtterance| utt001
+    meeting -->|mto:hasUtterance| utt002
+    meeting -->|mto:hasUtterance| utt003
+    meeting -->|mto:hasUtterance| utt006
+    meeting -->|mto:hasUtterance| utt007
+    meeting -->|mto:hasUtterance| utt011
+    meeting -->|mto:hasUtterance| utt012
+    meeting -->|mto:hasUtterance| utt015
+    meeting -->|mto:hasUtterance| utt016
+    
+    utt001 -->|mto:speaker| sarah
+    utt002 -->|mto:speaker| michael
+    utt003 -->|mto:speaker| jennifer
+    utt006 -->|mto:speaker| sarah
+    utt007 -->|mto:speaker| michael
+    utt011 -->|mto:speaker| david
+    utt012 -->|mto:speaker| michael
+    utt015 -->|mto:speaker| david
+    utt016 -->|mto:speaker| sarah
+    
+    %% Utterance to Intent
+    utt001 -->|mto:intent| intent001
+    utt002 -->|mto:intent| intent002
+    utt003 -->|mto:intent| intent003
+    utt006 -->|mto:intent| intent006
+    utt007 -->|mto:intent| intent007
+    utt015 -->|mto:intent| intent015
+    utt016 -->|mto:intent| intent016
+    
+    %% Utterance to Agenda
+    utt001 -->|mto:relatedToAgenda| agenda1
+    utt002 -->|mto:relatedToAgenda| agenda1
+    utt003 -->|mto:relatedToAgenda| agenda1
+    utt006 -->|mto:relatedToAgenda| agenda1
+    utt007 -->|mto:relatedToAgenda| agenda1
+    utt011 -->|mto:relatedToAgenda| agenda2
+    utt012 -->|mto:relatedToAgenda| agenda2
+    
+    %% Response Chains
+    utt003 -->|mto:responseToUtterance| utt002
+    utt012 -->|mto:responseToUtterance| utt011
+    utt016 -->|mto:responseToUtterance| utt015
+    
+    %% Decision Relationships
+    meeting -->|mto:hasDecision| dec1
+    meeting -->|mto:hasDecision| dec2
+    meeting -->|mto:hasDecision| dec3
+    meeting -->|mto:hasDecision| dec4
+    
+    dec1 -->|mto:proposedBy| michael
+    dec1 -->|mto:relatedAgendaItem| agenda1
+    dec1 -->|mto:hasVote| vote1
+    dec1 -->|mto:hasDiscussion| disc1
+    dec1 -->|mto:actionItem| action1
+    dec1 -->|prov:wasDerivedFrom| utt002
+    dec1 -->|prov:wasDerivedFrom| utt006
+    
+    dec2 -->|mto:proposedBy| sarah
+    dec2 -->|mto:relatedAgendaItem| agenda2
+    dec2 -->|mto:hasVote| vote2
+    dec2 -->|mto:hasDiscussion| disc2
+    dec2 -->|mto:actionItem| action2
+    dec2 -->|prov:wasDerivedFrom| utt011
+    
+    dec3 -->|mto:proposedBy| lisa
+    dec3 -->|mto:relatedAgendaItem| agenda3
+    dec3 -->|mto:hasDiscussion| disc3
+    dec3 -->|mto:actionItem| action3
+    
+    dec4 -->|mto:proposedBy| david
+    dec4 -->|prov:wasDerivedFrom| utt015
+    dec4 -->|prov:wasDerivedFrom| utt016
+    
+    %% Vote Relationships
+    vote1 -->|mto:individualVote| ivote1
+    vote1 -->|mto:individualVote| ivote2
+    vote1 -->|mto:individualVote| ivote3
+    vote1 -->|mto:individualVote| ivote4
+    
+    ivote1 -->|mto:voter| michael
+    ivote2 -->|mto:voter| jennifer
+    ivote3 -->|mto:voter| david
+    ivote4 -->|mto:voter| lisa
+    
+    %% Discussion Relationships
+    disc1 -->|mto:includesUtterance| utt002
+    disc1 -->|mto:includesUtterance| utt003
+    disc1 -->|mto:includesUtterance| utt006
+    disc1 -->|mto:participants| michael
+    disc1 -->|mto:participants| jennifer
+    disc1 -->|mto:participants| david
+    disc1 -->|mto:participants| lisa
+    disc1 -->|mto:participants| sarah
+    
+    disc2 -->|mto:includesUtterance| utt011
+    disc2 -->|mto:includesUtterance| utt012
+    disc2 -->|mto:participants| david
+    disc2 -->|mto:participants| michael
+    disc2 -->|mto:participants| sarah
+    
+    %% Entity Mention Relationships
+    utt002 -->|mto:mentionsEntity| entity1
+    utt002 -->|mto:mentionsEntity| entity2
+    utt015 -->|mto:mentionsEntity| entity4
+    
+    entity1 -->|mto:mentionedIn| utt002
+    entity1 -->|mto:entityUri| wd1
+    entity2 -->|mto:mentionedIn| utt002
+    entity2 -->|mto:entityUri| wd2
+    entity4 -->|mto:mentionedIn| utt015
+    entity4 -->|mto:entityUri| wd4
+    
+    %% Action Item Assignments
+    action1 -->|mto:assignedTo| jennifer
+    action1 -->|mto:assignedTo| michael
+    action2 -->|mto:assignedTo| david
+    action3 -->|mto:assignedTo| jennifer
+    
+    %% Agenda to Decision
+    agenda1 -->|mto:relatedDecision| dec1
+    agenda2 -->|mto:relatedDecision| dec2
+    agenda3 -->|mto:relatedDecision| dec3
+    
+    %% ============================================================================
+    %% STYLING
+    %% ============================================================================
+    
+    classDef meetingStyle fill:#e1f5ff,stroke:#01579b,stroke-width:3px,color:#000
+    classDef participantStyle fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef agendaStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef utteranceStyle fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef intentStyle fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    classDef decisionStyle fill:#c8e6c9,stroke:#2e7d32,stroke-width:3px,color:#000
+    classDef tabledStyle fill:#ffccbc,stroke:#bf360c,stroke-width:2px,color:#000
+    classDef voteStyle fill:#b3e5fc,stroke:#0277bd,stroke-width:2px,color:#000
+    classDef individualVoteStyle fill:#e0f7fa,stroke:#00838f,stroke-width:1px,color:#000
+    classDef discussionStyle fill:#d1c4e9,stroke:#512da8,stroke-width:2px,color:#000
+    classDef entityStyle fill:#ffe0b2,stroke:#e65100,stroke-width:2px,color:#000
+    classDef wikidataStyle fill:#ffecb3,stroke:#ff6f00,stroke-width:2px,color:#000
+    classDef actionStyle fill:#ffcdd2,stroke:#c62828,stroke-width:2px,color:#000
+    classDef locationStyle fill:#b2dfdb,stroke:#00695c,stroke-width:2px,color:#000
+    classDef transcriptStyle fill:#f5f5f5,stroke:#424242,stroke-width:2px,color:#000
